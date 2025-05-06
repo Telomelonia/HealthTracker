@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.apollographql.apollo3")
 }
 
 android {
@@ -72,7 +73,25 @@ dependencies {
 
     // GraphQL
     implementation("com.apollographql.apollo3:apollo-runtime:3.8.2")
+    implementation("com.apollographql.apollo3:apollo-api:3.8.2")
+
+
+    // OkHttp for network requests
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.8.1")
+
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+}
+
+apollo{
+    service("service"){
+        packageName.set("com.caresync.healthtracker")
+        schemaFile.set(file("src/main/graphql/com/schema.json"))
+        generateKotlinModels.set(true)
+    }
+
 }

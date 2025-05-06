@@ -1,0 +1,14 @@
+mutation CreateHealthMetric($input: CreateHealthMetricInput!) {
+    createHealthMetric(input: $input) {
+        healthMetric {
+            id
+            heartRate
+            steps
+            sleepHours
+            anxietyScore
+            anxietyLevel
+            recordedAt
+        }
+        errors
+    }
+}

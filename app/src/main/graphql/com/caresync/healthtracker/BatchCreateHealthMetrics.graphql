@@ -1,0 +1,15 @@
+mutation BatchCreateHealthMetrics($input: BatchCreateHealthMetricsInput!) {
+    batchCreateHealthMetrics(input: $input) {
+        healthMetrics {
+            id
+            heartRate
+            steps
+            sleepHours
+            anxietyScore
+            anxietyLevel
+            recordedAt
+        }
+        successCount
+        errors
+    }
+}
