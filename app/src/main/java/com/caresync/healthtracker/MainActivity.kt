@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.health.connect.client.HealthConnectClient
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,8 +28,21 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HealthScreen() {
+    val context = LocalContext.current
+    var healthConnectStatus by remember { mutableStateOf("Checking...") }
     var isDataCollected by remember { mutableStateOf(false) }
     var healthInfo by remember { mutableStateOf("No data collected yet") }
+
+    // Check Health Connect availability when the screen loads
+    LaunchedEffect(Unit) {
+        try {
+            // Simplify the Health Connect check to avoid import issues
+            val healthClient = HealthConnectClient.getOrCreate(context)
+            healthConnectStatus = "Health Connect is available"
+        } catch (e: Exception) {
+            healthConnectStatus = "Health Connect is not available: ${e.message}"
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -44,6 +58,16 @@ fun HealthScreen() {
             Text(
                 text = "Health Tracker",
                 style = MaterialTheme.typography.headlineMedium
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = healthConnectStatus,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (healthConnectStatus.contains("available"))
+                    MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.error
             )
 
             Spacer(modifier = Modifier.height(16.dp))
